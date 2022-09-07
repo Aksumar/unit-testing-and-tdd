@@ -1,6 +1,7 @@
 package com.acme.banking.dbo;
 
 import com.acme.banking.dbo.domain.Client;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -70,5 +71,16 @@ public class ClientTest {
 
         String nullString = null;
         assertThrows(IllegalArgumentException.class, () -> new Client(1, nullString));
+    }
+
+    @Test
+    public void correctClient() {
+        int id = 1;
+        String clientString = "client";
+
+        Client client = new Client(id, clientString);
+
+        Assertions.assertEquals(id, client.getId());
+        Assertions.assertEquals(clientString, client.getName());
     }
 }
