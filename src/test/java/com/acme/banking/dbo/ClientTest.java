@@ -5,18 +5,22 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assumptions.*;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 
 @DisplayName("Test suite")
 public class ClientTest {
-    @Test @Disabled("temporary disabled")
+    @Test
+    @Disabled("temporary disabled")
     @DisplayName("Test case")
     public void shouldStorePropertiesWhenCreated() {
         //region given
@@ -38,11 +42,11 @@ public class ClientTest {
 
         //Hamcrest:
         assertThat(sut,
-            allOf(
-                hasProperty("id", notNullValue()),
-                hasProperty("id", equalTo(clientId)),
-                hasProperty("name", is(clientName))
-        ));
+                allOf(
+                        hasProperty("id", notNullValue()),
+                        hasProperty("id", equalTo(clientId)),
+                        hasProperty("name", is(clientName))
+                ));
 
         //AssertJ:
         org.assertj.core.api.Assertions.assertThat(sut)
@@ -50,5 +54,21 @@ public class ClientTest {
                 .hasFieldOrPropertyWithValue("name", clientName);
         //also take a look at `extracting()` https://stackoverflow.com/a/51812188
         //endregion
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenIdIsNotValid() {
+        int idToCheck = -1;
+
+        assertThrows(IllegalArgumentException.class, () -> new Client(idToCheck, "client"));
+    }
+
+    @Test
+    public void shouldThrowExceptionWhenNameIsNotValid() {
+        String emptyString = "";
+        assertThrows(IllegalArgumentException.class, () -> new Client(1, emptyString));
+
+        String nullString = null;
+        assertThrows(IllegalArgumentException.class, () -> new Client(1, nullString));
     }
 }
