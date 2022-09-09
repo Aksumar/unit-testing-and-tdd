@@ -3,7 +3,11 @@ package com.acme.banking.dbo.domain;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import static org.hamcrest.Matchers.allOf;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 
 class SavingAccountTest {
     @Test
@@ -30,15 +34,17 @@ class SavingAccountTest {
     }
 
     @Test()
-    public void correctSavingAmount() {
+    public void shouldCreateSavingAccountWhenParametrsValid() {
         Client dummyClient = new Client(0, "client");
         int id = 1;
         int amount = 1;
         SavingAccount savingAccount = new SavingAccount(id, dummyClient, amount);
 
-        Assertions.assertEquals(id, savingAccount.getId());
-        Assertions.assertEquals(dummyClient, savingAccount.getClient());
-        Assertions.assertEquals(amount, savingAccount.getAmount());
+        assertAll("Correct arguments",
+                () -> Assertions.assertEquals(id, savingAccount.getId()),
+                () -> Assertions.assertEquals(dummyClient, savingAccount.getClient()),
+                () -> Assertions.assertEquals(amount, savingAccount.getAmount())
+        );
     }
 
 }
